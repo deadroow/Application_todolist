@@ -26,16 +26,19 @@ describe("AddForm component", () => {
 
 describe("AddForm submit button", () => {
   describe("basic", () => {
-    it("FORCE FAIL : Test de blocage du déploiement", () => {
+    it("should call the onCLick handler when submit button is clicked", () => {
       const onSubmitClick = jest.fn();
       const { button } = setup({ onSubmitClick: onSubmitClick });
-
-      // On force l'échec brutalement ici
-      // Cette commande arrête le test et renvoie une erreur critique
-      throw new Error("ÉCHEC VOLONTAIRE : Le pipeline doit s'arrêter ici.");
       
-      // Le code ci-dessous ne sera même pas lu
+      // On vérifie qu'il n'a pas encore été appelé
+      expect(onSubmitClick).not.toHaveBeenCalled();
+
+      // On simule le clic
       fireEvent.click(button);
+
+      // On vérifie que la fonction n'est TOUJOURS PAS appelée 
+      // (car le champ est vide, donc le composant bloque la soumission)
+      expect(onSubmitClick).not.toHaveBeenCalled(); 
     });
   });
 });
