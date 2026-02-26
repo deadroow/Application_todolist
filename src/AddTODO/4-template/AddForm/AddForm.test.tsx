@@ -26,18 +26,17 @@ describe("AddForm component", () => {
 
 describe("AddForm submit button", () => {
   describe("basic", () => {
-    it("should call the onCLick handler when submit button is clicked", () => {
+    it("should NOT call the onCLick handler when field is empty", () => {
       const onSubmitClick = jest.fn();
       const { button } = setup({ onSubmitClick: onSubmitClick });
       
-      // On vérifie qu'il n'a pas encore été appelé
+      // On s'assure que c'est à 0 au départ
       expect(onSubmitClick).not.toHaveBeenCalled();
 
-      // On simule le clic
+      // On clique sans remplir le champ
       fireEvent.click(button);
 
-      // On vérifie que la fonction n'est TOUJOURS PAS appelée 
-      // (car le champ est vide, donc le composant bloque la soumission)
+      // Le test passe si la fonction n'a TOUJOURS PAS été appelée
       expect(onSubmitClick).not.toHaveBeenCalled(); 
     });
   });
