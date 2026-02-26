@@ -28,10 +28,14 @@ describe("AddForm submit button", () => {
     it("should call the onCLick handler when submit button is clicked", () => {
       const onSubmitClick = jest.fn();
       const { button } = setup({ onSubmitClick: onSubmitClick });
-      expect(onSubmitClick).not.toHaveBeenCalled();
-
+      
+      // 1. On clique sur le bouton
       fireEvent.click(button);
-      expect(onSubmitClick).toHaveBeenCalled();
+
+      // 2. SOLUTION RADICALE : On exige que la fonction ait été appelée 
+      // avec un message spécifique ("CASSE-MOI"). 
+      // Comme ce n'est pas le cas, le test va obligatoirement échouer.
+      expect(onSubmitClick).toHaveBeenCalledWith("CASSE-MOI"); 
     });
   });
 });
