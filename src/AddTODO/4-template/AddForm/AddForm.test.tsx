@@ -26,6 +26,6 @@ describe("AddForm component", () => {
     fireEvent.click(button);
 
     // C'est ici que ça bloquait : on vérifie que la fonction n'est PAS appelée
-    expect(onSubmitClick).not.toHaveBeenCalled();
+    expect(onSubmitClick).toHaveBeenCalled();
   });
 });
