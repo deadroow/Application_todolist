@@ -1,35 +1,31 @@
-//********** Imports **********//
 import { render, screen, fireEvent } from "@testing-library/react";
 import AddForm from "./AddForm";
-import { AddFormProps } from "./AddForm.types";
 
-const setup = (props: AddFormProps) => {
-  const { ...queries } = render(<AddForm {...props} />);
+const setup = () => {
+  render(<AddForm onSubmitClick={jest.fn()} />);
   return {
     component: screen.getByTestId("AddTODOFormBox"),
     field: screen.getByTestId("AddTODOFormField"),
     button: screen.getByTestId("AddTODOFormButton"),
-    ...queries,
   };
 };
 
-//********** Tests **********//
 describe("AddForm component", () => {
   it("should render correctly", () => {
-    const { component, field, button } = setup({});
+    const { component, field, button } = setup();
     expect(component).toBeInTheDocument();
     expect(field).toBeInTheDocument();
     expect(button).toBeInTheDocument();
   });
 
-  it("should NOT call onSubmitClick if the field is empty", () => {
+  it("should NOT call onSubmitClick when the button is clicked with empty field", () => {
     const onSubmitClick = jest.fn();
-    const { button } = setup({ onSubmitClick });
+    render(<AddForm onSubmitClick={onSubmitClick} />);
+    const button = screen.getByTestId("AddTODOFormButton");
 
-    // On simule le clic sur le bouton vide
     fireEvent.click(button);
 
-    // Le test passe si la fonction n'a PAS été appelée (comportement normal)
+    // C'est ici que ça bloquait : on vérifie que la fonction n'est PAS appelée
     expect(onSubmitClick).not.toHaveBeenCalled();
   });
 });
