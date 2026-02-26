@@ -1,35 +1,47 @@
-name: Déploiement vers Vercel
+name: Déploiement vers Vercel après exécution des tests
 
+# Condition de déclenchement
 on:
   push:
     branches:
-      - main
+      - main # Déclenchement sur la branche principale (main)
 
 jobs:
+  # Premier job : exécution des tests
   test:
     runs-on: ubuntu-latest
+
     steps:
+      # Vérifier le code source
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Configurer Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22
 
+      # Installer les dépendances
       - name: Install dependencies
         run: npm install
 
+      # Exécuter les tests
+      # Le flag --watchAll=false est nécessaire pour quitter le mode interactif sur le serveur
       - name: Run tests
         run: npm test -- --watchAll=false
 
+  # Deuxième job : déploiement
   deploy:
-    needs: test
+    needs: test # Exécute le job de déploiement seulement si le job "test" réussit
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      # 1. Checkout du code source
+      - name: Checkout du code
         uses: actions/checkout@v3
 
+      # 2. Installation de Node.js et des dépendances
       - name: Installation de Node.js
         uses: actions/setup-node@v3
         with:
@@ -39,9 +51,11 @@ jobs:
       - name: Installation des dépendances
         run: npm install
 
+      # 3. Construire l'application React
       - name: Build de l'application
         run: npm run build
 
+      # 4. Déployer sur Vercel
       - name: Déploiement
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
