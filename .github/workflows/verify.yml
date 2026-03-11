@@ -5,12 +5,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-
 jobs:
   # 1. Job pour exécuter les tests unitaires
   test:
     runs-on: ubuntu-latest
-
     steps:
       # Vérifier le code source
       - name: Checkout code
@@ -26,10 +24,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Exécuter les tests
+      # Exécuter les tests avec génération du rapport de couverture
       - name: Run tests
         run: npm test -- --coverage --watchAll=false
 
+      # Sauvegarder le dossier coverage pour le job suivant
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  # 2. Job pour l'analyse SonarCloud
   sonarcloud:
     name: SonarCloud Scan
     needs: test # On lance le scan si les tests passent
@@ -39,6 +45,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 
+
+      # Récupérer le dossier coverage généré par le job "test"
+      - name: Download coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
@@ -50,6 +63,7 @@ jobs:
       - name: Run SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npx sonarqube-scanner \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
