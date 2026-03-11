@@ -3,18 +3,14 @@
 import {
   createEntityAdapter,
   createSlice,
-  EntityState,
 } from "@reduxjs/toolkit";
 import { TODO } from "../utils/types";
 
 const todoEntityAdapter = createEntityAdapter<TODO>();
 
-const initialState: EntityState<TODO, number> =
-  todoEntityAdapter.getInitialState();
-
-const todoSlice = createSlice({
+export const todoSlice = createSlice({
   name: "todos",
-  initialState,
+  initialState: todoEntityAdapter.getInitialState({}),
   reducers: {
     addTodo: todoEntityAdapter.addOne, // Ajoute un todo
     addTodos: todoEntityAdapter.addMany, // Ajoute plusieurs todo
@@ -27,5 +23,6 @@ const todoSlice = createSlice({
 // Exporter les actions générées
 export const { addTodo, addTodos, updateTodo, removeTodo, setAllTodos } =
   todoSlice.actions;
+export const todoGlobalizedSelector = todoEntityAdapter.getSelectors();
 
 export default todoSlice.reducer;
