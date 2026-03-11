@@ -1,6 +1,5 @@
 //********** Imports **********//
 import { TODO } from "../../../utils/types";
-
 import { useSelector } from "../../../store";
 import {
   Box,
@@ -16,21 +15,26 @@ const ListComponent = () => {
   const todos = useSelector((state) =>
     todoGlobalizedSelector.selectAll(state.todos)
   );
-  console.log(todos);
+
   return (
     <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       {todos.map((todo: TODO) => (
-        <>
-          <ListItem disablePadding id={todo.id.toString()} key={Math.random()}>
+        /* On utilise une Box ici car c'est l'élément le plus à l'extérieur de la boucle.
+           La key doit être STABLE (todo.id) et non générée (Math.random).
+        */
+        <Box key={todo.id}>
+          <ListItem disablePadding id={todo.id.toString()}>
             <ListItemButton>
               <ListItemText primary={todo.text} />
             </ListItemButton>
           </ListItem>
           <Divider />
-        </>
+        </Box>
       ))}
     </Box>
   );
 };
+
 ListComponent.displayName = "ListComponent";
+
 export default ListComponent;

@@ -3,7 +3,6 @@
 import {
   createEntityAdapter,
   createSlice,
-  EntityState,
 } from "@reduxjs/toolkit";
 import { TODO } from "../utils/types";
 
