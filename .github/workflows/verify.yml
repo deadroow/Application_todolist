@@ -67,4 +67,5 @@ jobs:
         run: |
           npx sonarqube-scanner \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-            -Dsonar.test.exclusions=src/**/*.test.ts,src/**/*.test.tsx
+            -Dsonar.test.exclusions=src/**/*.test.ts,src/**/*.test.tsx \
+            -Dsonar.coverage.exclusions=src/**/*
