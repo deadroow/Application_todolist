@@ -28,7 +28,7 @@ jobs:
 
       # Exécuter les tests
       - name: Run tests
-        run: npm test
+        run: npm test -- --coverage --watchAll=false
 
   sonarcloud:
     name: SonarCloud Scan
@@ -50,4 +50,7 @@ jobs:
       - name: Run SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: npx sonarqube-scanner
+        run: |
+          npx sonarqube-scanner \
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+            -Dsonar.test.exclusions=src/**/*.test.ts,src/**/*.test.tsx
